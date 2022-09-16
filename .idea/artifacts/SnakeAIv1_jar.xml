@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SnakeAIv1:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SnakeAIv1_jar</output-path>
+    <root id="archive" name="SnakeAIv1.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="SnakeAIv1" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/SnakeAI.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/Snake2022-v1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
