@@ -24,7 +24,7 @@ public class Astar {
             }
             map.append("\n");
         }
-        Logger.log(map.toString());
+        //Logger.log(map.toString());
     }
 
     public static boolean isValidPoint(char[][] grid, Node point) {

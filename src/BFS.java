@@ -25,7 +25,7 @@ public class BFS {
             }
             map.append("\n");
         }
-        Logger.log(map.toString());
+        //Logger.log(map.toString());
     }
 
     public static boolean isInvalidPoint(char[][] grid, Node point) {

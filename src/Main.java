@@ -39,7 +39,7 @@ class MyAgent extends DevelopmentAgent {
                 int appleY = Integer.parseInt(apple[0]);
                 board[appleX][appleY] = 'G';
 
-                //do stuff with apples
+                // Zombies
 
                 for (int zombie = 0; zombie < 6; zombie++) {
                     String zombieLine = br.readLine();
@@ -119,47 +119,69 @@ class MyAgent extends DevelopmentAgent {
                 ArrayList<Integer> stepsList = new ArrayList<>();
 
                 // Get the steps of the other snakes
-                for (int i = 0; i < snakeHeadX.size(); i++) {
-                    int xHeadj = snakeHeadX.get(i);
-                    int yHeadj = snakeHeadY.get(i);
-
-                    char c = board[xHeadj][yHeadj];
-
-                    board[xHeadj][yHeadj] = 'S';
-
-                    ArrayList<String> path = BFS.startBFSAnalyze(board);
-
-                    int steps = path.size();
-
-                    //System.out.println("log Steps: " + steps);
-
-                    stepsList.add(steps);
-
-                    board[xHeadj][yHeadj] = c;
-
-                    // If there are more than 3 steps, then loop through the first 3 elements of the path
-                    for (int j = 0; j < 1; j++) {
-                        if (path.size() > 1) {
-                            String[] tempPath = path.get(j).split(",");
-                            int x = Integer.parseInt(tempPath[0]);
-                            int y = Integer.parseInt(tempPath[1]);
-
-                            board[y][x] = 'x';
-                        }
-                    }
-                }
+//                for (int i = 0; i < snakeHeadX.size(); i++) {
+//                    int xHeadj = snakeHeadX.get(i);
+//                    int yHeadj = snakeHeadY.get(i);
+//
+//                    char c = board[xHeadj][yHeadj];
+//
+//                    board[xHeadj][yHeadj] = 'S';
+//
+//                    ArrayList<String> path = BFS.startBFSAnalyze(board);
+//
+//                    int steps = path.size();
+//
+//                    //System.out.println("log Steps: " + steps);
+//
+//                    stepsList.add(steps);
+//
+//                    board[xHeadj][yHeadj] = c;
+//
+//                    // If there are more than 3 steps, then loop through the first 3 elements of the path
+//                    for (int j = 0; j < 2; j++) {
+//                        if (path.size() > 1) {
+//                            String[] tempPath = path.get(j).split(",");
+//                            int x = Integer.parseInt(tempPath[0]);
+//                            int y = Integer.parseInt(tempPath[1]);
+//
+//                            board[y][x] = 'x';
+//                        }
+//                    }
+//                }
 
                 board[yHead][xHead] = 'S';
 
                 //DrawBoard.printBoard(board);
 
-                int mySteps = BFS.startBFS(board, false);
+//                int mySteps = BFS.startBFS(board, false);
 
                 // Output true or false if my snake is closer to the apple than the other snakes
-                boolean isCloser = mySteps < stepsList.stream().min(Integer::compareTo).orElse(0);
+//                boolean isCloser = mySteps < stepsList.stream().min(Integer::compareTo).orElse(0);
+//                System.out.println("log " + "My snake is closer to the apple: " + isCloser);
+
+                // Checking who is closer using manhattan distance
+
+                ArrayList<Double> distances = new ArrayList<>();
+
+                Point tempApple = new Point(appleY, appleX);
+
+                for (int i = 0; i < snakeHeadX.size(); i++) {
+                    int xHeadj = snakeHeadX.get(i);
+                    int yHeadj = snakeHeadY.get(i);
+
+                    Point snakeHead = new Point(xHeadj, yHeadj);
+
+                    double distance = snakeHead.distanceTo(tempApple);
+                    distances.add(distance);
+                }
+
+                Point myHead = new Point(yHead, xHead);
+                double myDistance = myHead.distanceTo(tempApple);
+
+                // Output true or false if my snake is closer to the apple than the other snakes
+                boolean isCloser = myDistance < distances.stream().min(Double::compareTo).orElse(0.0);
                 System.out.println("log " + "My snake is closer to the apple: " + isCloser);
 
-                int move = 5;
 
                 if (isCloser) {
                     move = Astar.startAStar(board);
@@ -172,6 +194,28 @@ class MyAgent extends DevelopmentAgent {
 //                    board[yTail][xTail] = 'G';
 //                    move = Tail.startBFS(board);
                 }
+
+                // Now I need to check if I have a path back to my tail once the move is taken
+
+                // Case that the move is 1, 2, 3 or 4
+
+                switch (move) {
+                    case 1:
+                        // code block
+                        break;
+                    case 2:
+                        // code block
+                        break;
+                    case 3:
+                        // code block
+                        break;
+                    case 4:
+                        // code block
+                        break;
+                    default:
+                        int move = 5;
+                }
+
 
                 System.out.println(move);
             }
