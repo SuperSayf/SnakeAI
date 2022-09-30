@@ -183,6 +183,8 @@ class MyAgent extends DevelopmentAgent {
                 System.out.println("log " + "My snake is closer to the apple: " + isCloser);
 
 
+                int move = 5;
+
                 if (isCloser) {
                     move = Astar.startAStar(board);
                     //move = BFS.startBFS(board, true);
@@ -200,20 +202,51 @@ class MyAgent extends DevelopmentAgent {
                 // Case that the move is 1, 2, 3 or 4
 
                 switch (move) {
-                    case 1:
-                        // code block
-                        break;
-                    case 2:
-                        // code block
-                        break;
-                    case 3:
-                        // code block
-                        break;
-                    case 4:
-                        // code block
-                        break;
-                    default:
-                        int move = 5;
+                    case 0 -> {
+                        // Up (relative to the play area - north)
+                        board[yHead][xHead] = 'x';
+                        board[yHead][xHead + 1] = 'S';
+                        board[yTail][xTail] = 'G';
+                        if (Tail.startBFS(board) == -1) {
+                            board[yHead][xHead] = 'S';
+                            board[yHead][xHead + 1] = 'x';
+                            move = Tail.startBFS(board);
+                        }
+                    }
+                    case 1 -> {
+                        // Down (relative to the play area - south)
+                        board[yHead][xHead] = 'x';
+                        board[yHead][xHead - 1] = 'S';
+                        board[yTail][xTail] = 'G';
+                        if (Tail.startBFS(board) == -1) {
+                            board[yHead][xHead] = 'S';
+                            board[yHead][xHead - 1] = 'x';
+                            move = Tail.startBFS(board);
+                        }
+                    }
+                    case 2 -> {
+                        // Left (relative to the play area - west)
+                        board[yHead][xHead] = 'x';
+                        board[yHead - 1][xHead] = 'S';
+                        board[yTail][xTail] = 'G';
+                        if (Tail.startBFS(board) == -1) {
+                            board[yHead][xHead] = 'S';
+                            board[yHead - 1][xHead] = 'x';
+                            move = Tail.startBFS(board);
+                        }
+                    }
+                    case 3 -> {
+                        // Right (relative to the play area - east)
+                        board[yHead][xHead] = 'x';
+                        board[yHead + 1][xHead] = 'S';
+                        board[yTail][xTail] = 'G';
+                        if (Tail.startBFS(board) == -1) {
+                            board[yHead][xHead] = 'S';
+                            board[yHead + 1][xHead] = 'x';
+                            move = Tail.startBFS(board);
+                        }
+                    }
+                    default -> move = 5;
                 }
 
 
