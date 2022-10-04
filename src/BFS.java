@@ -89,6 +89,30 @@ public class BFS {
         return path;
     }
 
+//    public static void VornoiDiagram(char[][] grid) {
+//        Point start = new Point(), end = new Point();
+//
+//        // Find the start and end points using the grid
+//        // Note: I am setting the apple as the head and the head as the apple so that I can easily the last co-ordinate of the path
+//        for (int i = 0; i < 50; i++) {
+//            for (int j = 0; j < 50; j++) {
+//                if (grid[i][j] == 'G')
+//                    start.set(i, j);
+//
+//                else if (grid[i][j] == 'S')
+//                    end.set(i, j);
+//            }
+//        }
+//
+//        Node head = new Node(start.row, start.col, end);
+//        Node apple = new Node(end.row, end.col, end);
+//
+//        // Now we will have a shared visited array for all the snakes
+//        boolean[][] visited = new boolean[50][50];
+//
+//        // Do a BFS on every snake, and keep adding to the shared array
+//    }
+
     public static int startBFS(char[][] grid, boolean mySnake) {
         Point start = new Point(), end = new Point();
 

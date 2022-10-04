@@ -205,27 +205,16 @@ class MyAgent extends DevelopmentAgent {
                     case 0 -> {
                         // Up (relative to the play area - north)
                         board[yHead][xHead] = 'x';
-                        board[yHead][xHead + 1] = 'S';
+                        board[yHead + 1][xHead] = 'S';
                         board[yTail][xTail] = 'G';
                         if (Tail.startBFS(board) == -1) {
                             board[yHead][xHead] = 'S';
-                            board[yHead][xHead + 1] = 'x';
+                            board[yHead + 1][xHead] = 'x';
                             move = Tail.startBFS(board);
                         }
                     }
                     case 1 -> {
                         // Down (relative to the play area - south)
-                        board[yHead][xHead] = 'x';
-                        board[yHead][xHead - 1] = 'S';
-                        board[yTail][xTail] = 'G';
-                        if (Tail.startBFS(board) == -1) {
-                            board[yHead][xHead] = 'S';
-                            board[yHead][xHead - 1] = 'x';
-                            move = Tail.startBFS(board);
-                        }
-                    }
-                    case 2 -> {
-                        // Left (relative to the play area - west)
                         board[yHead][xHead] = 'x';
                         board[yHead - 1][xHead] = 'S';
                         board[yTail][xTail] = 'G';
@@ -235,14 +224,25 @@ class MyAgent extends DevelopmentAgent {
                             move = Tail.startBFS(board);
                         }
                     }
-                    case 3 -> {
-                        // Right (relative to the play area - east)
+                    case 2 -> {
+                        // Left (relative to the play area - west)
                         board[yHead][xHead] = 'x';
-                        board[yHead + 1][xHead] = 'S';
+                        board[yHead][xHead - 1] = 'S';
                         board[yTail][xTail] = 'G';
                         if (Tail.startBFS(board) == -1) {
                             board[yHead][xHead] = 'S';
-                            board[yHead + 1][xHead] = 'x';
+                            board[yHead][xHead - 1] = 'x';
+                            move = Tail.startBFS(board);
+                        }
+                    }
+                    case 3 -> {
+                        // Right (relative to the play area - east)
+                        board[yHead][xHead] = 'x';
+                        board[yHead][xHead + 1] = 'S';
+                        board[yTail][xTail] = 'G';
+                        if (Tail.startBFS(board) == -1) {
+                            board[yHead][xHead] = 'S';
+                            board[yHead][xHead + 1] = 'x';
                             move = Tail.startBFS(board);
                         }
                     }
