@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -153,6 +154,9 @@ public class BFS {
 
             for (int[] off : adj) {
                 Node nb = new Node(topNode.row + off[0], topNode.col + off[1], end);
+
+                // Get the current length of the queue
+                int queueLength = toVisit.size();
 
                 if (isInvalidPoint(grid, nb) || visited[nb.row][nb.col])
                     continue;

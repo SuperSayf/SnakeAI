@@ -5,13 +5,35 @@ public class Tail {
 
     static int[][] adj = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
+    public static void printPath(char[][] grid, Node start, Node end) {
+        Node endNode = end.parent;
+
+        while (!endNode.equals(start)) {
+            grid[endNode.row][endNode.col] = '+';
+            endNode = endNode.parent;
+        }
+
+        printGrid(grid);
+    }
+
+    public static void printGrid(char[][] grid) {
+        StringBuilder map = new StringBuilder();
+        for (char[] chars : grid) {
+            for (char aChar : chars) {
+                map.append(aChar).append(" ");
+            }
+            map.append("\n");
+        }
+        //Logger.log(map.toString());
+    }
+
     public static boolean isInvalidPoint(char[][] grid, Node point) {
         if (point.row < 0 || point.row >= grid.length || point.col < 0 || point.col >= grid[0].length)
             return true;
         return grid[point.row][point.col] == 'x';
     }
 
-    public static int startBFS(char[][] grid) {
+    public static int startBFS(char[][] grid, boolean isMark) {
         Point start = new Point(), end = new Point();
 
         // Find the start and end points using the grid
@@ -40,6 +62,11 @@ public class Tail {
             Node topNode = toVisit.poll();
 
             if (topNode.equals(apple)) {
+
+                if (isMark) {
+                    printPath(grid, head, topNode);
+                }
+
                 return getMove(apple, topNode.parent);
             }
 
