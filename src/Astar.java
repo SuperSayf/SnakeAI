@@ -27,8 +27,10 @@ public class Astar {
         //Logger.log(map.toString());
     }
 
-    public static boolean isValidPoint(char[][] grid, Node point) {
-        return point.row < 0 || point.row == 50 || point.col < 0 || point.col == 50 || grid[point.row][point.col] == 'x';
+    public static boolean isInvalidPoint(char[][] grid, Node point) {
+        if (point.row < 0 || point.row >= grid.length || point.col < 0 || point.col >= grid[0].length)
+            return true;
+        return grid[point.row][point.col] == 'x';
     }
 
     public static int startAStar(char[][] grid) {
@@ -66,7 +68,7 @@ public class Astar {
             for (int[] off : adj) {
                 Node node = new Node(curr.row + off[0], curr.col + off[1], end);
 
-                if (isValidPoint(grid, node) || visited.contains(node))
+                if (isInvalidPoint(grid, node) || visited.contains(node))
                     continue;
 
                 visited.add(node);
