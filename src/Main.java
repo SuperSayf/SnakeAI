@@ -33,7 +33,7 @@ class MyAgent extends DevelopmentAgent {
             map.append("\n");
         }
 
-        //Logger.log(map.toString());
+        Logger.log(map.toString());
     }
 
     @Override
@@ -44,6 +44,7 @@ class MyAgent extends DevelopmentAgent {
             int nSnakes = Integer.parseInt(temp[0]);
             char[][] board = new char[50][50];
             int[][] boardFuture = new int[50][50];
+            int[][] boardVornoi = new int[50][50];
 
             while (true) {
 
@@ -51,6 +52,7 @@ class MyAgent extends DevelopmentAgent {
                     for (int j = 0; j < 50; j++) {
                         board[i][j] = '-';
                         boardFuture[i][j] = -1;
+                        boardVornoi[i][j] = -1;
                     }
                 }
 
@@ -85,19 +87,20 @@ class MyAgent extends DevelopmentAgent {
 
                     // Surround the head of the zombie snake with x's
 
-                    int[] dRow = {1, 0, -1, 0};
-                    int[] dCol = {0, 1, 0, -1};
-
-                    for (int i = 0; i < 4; i++) {
-                        int row = y + dRow[i];
-                        int col = x + dCol[i];
-                        if (row >= 0 && row < 50 && col >= 0 && col < 50) {
-                            board[row][col] = 'x';
-                        }
-                    }
+//                    int[] dRow = {1, 0, -1, 0};
+//                    int[] dCol = {0, 1, 0, -1};
+//
+//                    for (int i = 0; i < 4; i++) {
+//                        int row = y + dRow[i];
+//                        int col = x + dCol[i];
+//                        if (row >= 0 && row < 50 && col >= 0 && col < 50) {
+//                            board[row][col] = 'x';
+//                        }
+//                    }
 
                     DrawBoard.drawSnake(zombieLine, board);
                     DrawBoard.drawSnakeFuture(zombieLine, boardFuture, 5);
+                    DrawBoard.drawSnakeVornoi(zombieLine, boardVornoi, zombie + 1);
                 }
 
                 int mySnakeNum = Integer.parseInt(br.readLine());
@@ -121,9 +124,13 @@ class MyAgent extends DevelopmentAgent {
 
                         // Get the head coordinates of my snake
                         if (i == mySnakeNum) {
+
                             String[] head = snakeDetails[3].split(",");
                             xHead = Integer.parseInt(head[0]);
                             yHead = Integer.parseInt(head[1]);
+
+                            snakeHeadX.add(xHead);
+                            snakeHeadY.add(yHead);
 
                             // Last element in the snakeDetails array is the tail
                             String[] tail = snakeDetails[snakeDetails.length - 1].split(",");
@@ -149,6 +156,7 @@ class MyAgent extends DevelopmentAgent {
 
                         DrawBoard.drawSnake(snake.toString(), board);
                         DrawBoard.drawSnakeFuture(snake.toString(), boardFuture, length);
+                        DrawBoard.drawSnakeVornoi(snake.toString(), boardVornoi, i + 1 + 6);
 
                     }
                 }
@@ -229,6 +237,17 @@ class MyAgent extends DevelopmentAgent {
 
                 board[yHead][xHead] = 'S';
 
+                // Create a copy of the board
+                char[][] boardCopy = new char[50][50];
+                for (int i = 0; i < 50; i++) {
+                    for (int j = 0; j < 50; j++) {
+                        boardCopy[j][i] = board[j][i];
+                    }
+                }
+
+                BFS.VornoiDiagram(boardCopy, boardVornoi, ZombiesnakeHeadX, ZombiesnakeHeadY, snakeHeadX, snakeHeadY);
+
+
                 //DrawBoard.printBoard(board);
 
                 int mySteps = BFS.startBFS(board, boardFuture, false, false);
@@ -260,44 +279,43 @@ class MyAgent extends DevelopmentAgent {
                 // boolean isCloser = myDistance < distances.stream().min(Double::compareTo).orElse(0.0);
                 //System.out.println("log " + "My snake is closer to the apple: " + isCloser);
 
-
                 int move = 5;
 
                 if (isCloser) {
 
                     if (Astar.startAStar(board) == -1) {
                         // Remove the 'x's surrounding the zombie snake head
-                        for (int i = 0; i < ZombiesnakeHeadX.size(); i++) {
-                            int xHeadj = ZombiesnakeHeadX.get(i);
-                            int yHeadj = ZombiesnakeHeadY.get(i);
-
-                            int[] dRow = {1, 0, -1, 0};
-                            int[] dCol = {0, 1, 0, -1};
-
-                            for (int k = 0; k < 4; k++) {
-                                int row = yHeadj + dRow[k];
-                                int col = xHeadj + dCol[k];
-                                if (row >= 0 && row < 50 && col >= 0 && col < 50) {
-                                    if (board[row][col] == 'x') {
-                                        board[row][col] = '-';
-                                    }
-                                }
-                            }
-                        }
-
-                        for (int zombie = 0; zombie < 6; zombie++) {
-                            DrawBoard.drawSnake(ZombieLineArray.get(zombie), board);
-                        }
+//                        for (int i = 0; i < ZombiesnakeHeadX.size(); i++) {
+//                            int xHeadj = ZombiesnakeHeadX.get(i);
+//                            int yHeadj = ZombiesnakeHeadY.get(i);
+//
+//                            int[] dRow = {1, 0, -1, 0};
+//                            int[] dCol = {0, 1, 0, -1};
+//
+//                            for (int k = 0; k < 4; k++) {
+//                                int row = yHeadj + dRow[k];
+//                                int col = xHeadj + dCol[k];
+//                                if (row >= 0 && row < 50 && col >= 0 && col < 50) {
+//                                    if (board[row][col] == 'x') {
+//                                        board[row][col] = '-';
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                        for (int zombie = 0; zombie < 6; zombie++) {
+//                            DrawBoard.drawSnake(ZombieLineArray.get(zombie), board);
+//                        }
 
                         //System.out.println("log " + "Removed zombie buffer");
-
                         move = Astar.startAStar(board);
-                        printGrid(board);
+                        //printGrid(board);
+                        //printIntGrid(boardFuture);
 
                     } else {
                         move = Astar.startAStar(board);
                         //move = BFS.startBFS(board, true);
-                        printGrid(board);
+                        //printGrid(board);
                         //printIntGrid(boardFuture);
                     }
 
@@ -307,7 +325,7 @@ class MyAgent extends DevelopmentAgent {
                     // Find the co-ordinate in a 50x50 char grid which has the least 'x's surrounding it
                     int[] dCol = {1, 0, -1, 0};
                     int[] dRow = {0, 1, 0, -1};
-
+//
                     int min = Integer.MAX_VALUE;
                     int minRow = 0, minCol = 0;
 
@@ -344,35 +362,34 @@ class MyAgent extends DevelopmentAgent {
                     if (BFS.startBFS(board, boardFuture, true, false) == -1) {
 
                         // Remove the 'x's surrounding the zombie snake head
-                        for (int i = 0; i < ZombiesnakeHeadX.size(); i++) {
-                            int xHeadj = ZombiesnakeHeadX.get(i);
-                            int yHeadj = ZombiesnakeHeadY.get(i);
-
-                            for (int k = 0; k < 4; k++) {
-                                int row = yHeadj + dRow[k];
-                                int col = xHeadj + dCol[k];
-                                if (row >= 0 && row < 50 && col >= 0 && col < 50) {
-                                    if (board[row][col] == 'x') {
-                                        board[row][col] = '-';
-                                    }
-                                }
-                            }
-                        }
-
-                        for (int zombie = 0; zombie < 6; zombie++) {
-                            DrawBoard.drawSnake(ZombieLineArray.get(zombie), board);
-                        }
+//                        for (int i = 0; i < ZombiesnakeHeadX.size(); i++) {
+//                            int xHeadj = ZombiesnakeHeadX.get(i);
+//                            int yHeadj = ZombiesnakeHeadY.get(i);
+//
+//                            for (int k = 0; k < 4; k++) {
+//                                int row = yHeadj + dRow[k];
+//                                int col = xHeadj + dCol[k];
+//                                if (row >= 0 && row < 50 && col >= 0 && col < 50) {
+//                                    if (board[row][col] == 'x') {
+//                                        board[row][col] = '-';
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                        for (int zombie = 0; zombie < 6; zombie++) {
+//                            DrawBoard.drawSnake(ZombieLineArray.get(zombie), board);
+//                        }
 
                         //System.out.println("log " + "Removed zombie buffer");
-
                         move = BFS.startBFS(board, boardFuture, true, false);
-                        printGrid(board);
+                        //printGrid(board);
                         //printIntGrid(boardFuture);
 
                     } else {
                         move = BFS.startBFS(board, boardFuture, true, false);
-                        printGrid(board);
-                        //BFS.VornoiDiagram(board, ZombiesnakeHeadX, ZombiesnakeHeadY, snakeHeadX, snakeHeadY);
+                        //printGrid(board);
+                        //printIntGrid(boardFuture);
                         //printIntGrid(boardFuture);
                     }
 

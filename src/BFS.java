@@ -105,48 +105,50 @@ public class BFS {
         return path;
     }
 
-    public static void VornoiDiagram(char[][] grid, ArrayList<Integer> ZombiesnakeHeadX, ArrayList<Integer> ZombiesnakeHeadY, ArrayList<Integer> snakeHeadX, ArrayList<Integer> snakeHeadY) {
+    public static void VornoiDiagram(char[][] grid, int[][] boardVornoi, ArrayList<Integer> ZombiesnakeHeadX, ArrayList<Integer> ZombiesnakeHeadY, ArrayList<Integer> snakeHeadX, ArrayList<Integer> snakeHeadY) {
 
-        ArrayList<Integer> HeadsX = new ArrayList<>(snakeHeadX);
-        ArrayList<Integer> HeadsY = new ArrayList<>(snakeHeadY);
-        HeadsX.addAll(ZombiesnakeHeadX);
-        HeadsY.addAll(ZombiesnakeHeadY);
+        ArrayList<Integer> HeadsY = new ArrayList<>(ZombiesnakeHeadX);
+        ArrayList<Integer> HeadsX = new ArrayList<>(ZombiesnakeHeadY);
+        HeadsY.addAll(snakeHeadX);
+        HeadsX.addAll(snakeHeadY);
 
-        // Now we will have a shared visited array for all the snakes
-        boolean[][] visited = new boolean[50][50];
-        int[][] visitedView = new int[50][50];
+        int numberOfHeads = HeadsX.size();
 
-        //do 1 iteration of BFS for each snake, meaning, for all of the nodes in that snake's queue, you'd explore each item in that queue and add it's neighbours to their queue, then switch to the next snake, that way, you kind of make a territory map, of which snake owns which cell
-        for (int i = 0; i < (ZombiesnakeHeadX.size() + snakeHeadX.size()); i++) {
-
-            Queue<Node> toVisit = new LinkedList<>();
-
-            // Add the head of the snake to the queue
-            toVisit.add(new Node(HeadsX.get(i), HeadsY.get(i), new Point(HeadsX.get(i), HeadsY.get(i))));
-
-            // Mark the head of the snake as visited
-            visited[HeadsX.get(i)][HeadsY.get(i)] = true;
-            visitedView[HeadsX.get(i)][HeadsY.get(i)] = i;
-
-            while (!toVisit.isEmpty()) {
-                Node topNode = toVisit.poll();
-
-                for (int[] off : adj) {
-                    Node nb = new Node(topNode.row + off[0], topNode.col + off[1], new Point(topNode.row + off[0], topNode.col + off[1]));
-
-                    if (isInvalidPoint(grid, nb) || visited[nb.row][nb.col])
-                        continue;
-
-                    visited[nb.row][nb.col] = true;
-                    visitedView[nb.row][nb.col] = i;
-                    toVisit.add(nb);
-                    nb.parent = topNode;
-                }
-            }
+        // Have a queue for each head and add it to an array of queues, and perform directional BFS on each queue
+        ArrayList<Queue<Node>> toVisit = new ArrayList<>();
+        for (int i = 0; i < numberOfHeads; i++) {
+            Queue<Node> queue = new LinkedList<>();
+            queue.add(new Node(HeadsX.get(i), HeadsY.get(i), new Point()));
+            toVisit.add(queue);
         }
 
-        // Indicate which snake owns which cell
-        MyAgent.printIntGrid(visitedView);
+        // Peform a n-directional BFS on each queue
+        while (true) {
+            boolean allEmpty = true;
+            for (int i = 0; i < numberOfHeads; i++) {
+                Queue<Node> queue = toVisit.get(i);
+                if (!queue.isEmpty()) {
+                    allEmpty = false;
+                    Node topNode = queue.poll();
+                    grid[topNode.row][topNode.col] = 'x';
+
+                    boardVornoi[topNode.row][topNode.col] = i + 1;
+
+                    for (int[] off : adj) {
+                        Node nb = new Node(topNode.row + off[0], topNode.col + off[1], new Point());
+                        if (isInvalidPoint(grid, nb)) {
+                            boardVornoi[topNode.row][topNode.col] = i + 1;
+                            continue;
+                        }
+                        queue.add(nb);
+                    }
+                }
+            }
+            if (allEmpty)
+                break;
+        }
+
+        MyAgent.printIntGrid(boardVornoi);
 
     }
 
