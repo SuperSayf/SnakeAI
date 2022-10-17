@@ -20,7 +20,7 @@ class MyAgent extends DevelopmentAgent {
             }
             map.append("\n");
         }
-        //Logger.log(map.toString());
+        Logger.log(map.toString());
     }
 
     public static void printIntGrid(int[][] grid) {
@@ -33,7 +33,7 @@ class MyAgent extends DevelopmentAgent {
             map.append("\n");
         }
 
-        Logger.log(map.toString());
+        //Logger.log(map.toString());
     }
 
     @Override
@@ -161,7 +161,7 @@ class MyAgent extends DevelopmentAgent {
                     }
                 }
 
-                ArrayList<Integer> stepsList = new ArrayList<>();
+                //ArrayList<Integer> stepsList = new ArrayList<>();
 
                 // Get the steps of the zombie snakes
 //                for (int i = 0; i < ZombiesnakeHeadX.size(); i++) {
@@ -203,57 +203,47 @@ class MyAgent extends DevelopmentAgent {
 //                board[appleX][appleY] = 'G';
 
                 // Get the steps of the other snakes
-                for (int i = 0; i < snakeHeadX.size(); i++) {
-                    int xHeadj = snakeHeadX.get(i);
-                    int yHeadj = snakeHeadY.get(i);
-
-                    char c = board[xHeadj][yHeadj];
-
-                    board[xHeadj][yHeadj] = 'S';
-
-                    ArrayList<String> path = BFS.startBFSAnalyze(board);
-
-                    int steps = path.size();
-
-                    //System.out.println("log Steps: " + steps);
-
-                    stepsList.add(steps);
-
-                    board[xHeadj][yHeadj] = c;
-
-                    // If there are more than 3 steps, then loop through the first 2 elements of the path
-                    for (int j = 0; j < 2; j++) {
-                        if (steps >= 3) {
-                            String[] tempPath = path.get(j).split(",");
-                            int x = Integer.parseInt(tempPath[0]);
-                            int y = Integer.parseInt(tempPath[1]);
-
-                            if (board[x][y] != 'G' || board[x][y] != 'S' || board[x][y] != 'A') {
-                                board[y][x] = 'x';
-                            }
-                        }
-                    }
-                }
+//                for (int i = 0; i < snakeHeadX.size(); i++) {
+//                    int xHeadj = snakeHeadX.get(i);
+//                    int yHeadj = snakeHeadY.get(i);
+//
+//                    char c = board[xHeadj][yHeadj];
+//
+//                    board[xHeadj][yHeadj] = 'S';
+//
+//                    ArrayList<String> path = BFS.startBFSAnalyze(board);
+//
+//                    int steps = path.size();
+//
+//                    //System.out.println("log Steps: " + steps);
+//
+//                    stepsList.add(steps);
+//
+//                    board[xHeadj][yHeadj] = c;
+//
+//                    // If there are more than 3 steps, then loop through the first 2 elements of the path
+//                    for (int j = 0; j < 2; j++) {
+//                        if (steps >= 3) {
+//                            String[] tempPath = path.get(j).split(",");
+//                            int x = Integer.parseInt(tempPath[0]);
+//                            int y = Integer.parseInt(tempPath[1]);
+//
+//                            if (board[x][y] != 'G' || board[x][y] != 'S' || board[x][y] != 'A') {
+//                                board[y][x] = 'x';
+//                            }
+//                        }
+//                    }
+//                }
 
                 board[yHead][xHead] = 'S';
-
-                // Create a copy of the board
-                char[][] boardCopy = new char[50][50];
-                for (int i = 0; i < 50; i++) {
-                    for (int j = 0; j < 50; j++) {
-                        boardCopy[j][i] = board[j][i];
-                    }
-                }
-
-                BFS.VornoiDiagram(boardCopy, boardVornoi, ZombiesnakeHeadX, ZombiesnakeHeadY, snakeHeadX, snakeHeadY);
 
 
                 //DrawBoard.printBoard(board);
 
-                int mySteps = BFS.startBFS(board, boardFuture, false, false);
+                //int mySteps = BFS.startBFS(board, boardFuture, false, false);
 
                 // Output true or false if my snake is closer to the apple than the other snakes
-                boolean isCloser = mySteps < stepsList.stream().min(Integer::compareTo).orElse(0);
+                //boolean isCloser = mySteps < stepsList.stream().min(Integer::compareTo).orElse(0);
                 //System.out.println("log " + "My snake is closer to the apple: " + isCloser);
 
                 // Checking who is closer using manhattan distance
@@ -279,33 +269,105 @@ class MyAgent extends DevelopmentAgent {
                 // boolean isCloser = myDistance < distances.stream().min(Double::compareTo).orElse(0.0);
                 //System.out.println("log " + "My snake is closer to the apple: " + isCloser);
 
-                int move = 5;
+                // Get the steps of the zombie snakes
+                ArrayList<Integer> stepsList = new ArrayList<>();
+                for (int i = 0; i < ZombiesnakeHeadX.size(); i++) {
+                    int xHeadj = ZombiesnakeHeadX.get(i);
+                    int yHeadj = ZombiesnakeHeadY.get(i);
+
+                    char c = board[yHeadj][xHeadj];
+
+                    board[yHeadj][xHeadj] = 'S';
+
+                    board[appleX][appleY] = 'A';
+
+                    board[yHead][xHead] = 'G';
+
+                    ArrayList<String> path = BFS.startBFSAnalyze(board);
+
+                    int steps = path.size();
+
+                    //System.out.println("log Steps: " + steps);
+
+                    stepsList.add(steps);
+
+                    board[yHeadj][xHeadj] = c;
+
+                    // To-do
+                    // This takes them straight to my head, I need it one in front of my head
+
+                    // If there are more than 3 steps, then loop through the first 2 elements of the path
+                    for (int j = 0; j < 2; j++) {
+                        if (steps >= 2) {
+                            String[] tempPath = path.get(j).split(",");
+                            int x = Integer.parseInt(tempPath[0]);
+                            int y = Integer.parseInt(tempPath[1]);
+
+                            // Replace the x-y zombie head coordinates with the x-y coordinates of the path
+                            ZombiesnakeHeadX.set(i, y);
+                            ZombiesnakeHeadY.set(i, x);
+
+                            if (board[x][y] != 'G' || board[x][y] != 'S' || board[x][y] != 'A') {
+                                board[x][y] = 'x';
+                            }
+                        }
+                    }
+                }
+
+                stepsList.clear();
+                board[yHead][xHead] = 'S';
+                board[appleX][appleY] = 'G';
+
+                //printGrid(board);
+
+                // Make a copy og boardVolnori
+                int[][] boardVornoiCopy = new int[50][50];
+                for (int i = 0; i < 50; i++) {
+                    System.arraycopy(boardVornoi[i], 0, boardVornoiCopy[i], 0, 50);
+                }
+
+                //printIntGrid(boardVornoi);
+                //printIntGrid(boardVornoiCopy);
+                BFS.VornoiDiagram(boardVornoi, ZombiesnakeHeadX, ZombiesnakeHeadY, snakeHeadX, snakeHeadY);
+                //printIntGrid(boardVornoi);
+
+                boolean isCloser = boardVornoi[appleX][appleY] == 7;
+                //isCloser = true;
+
+                // Set the boardVornoi back to the original
+                for (int i = 0; i < 50; i++) {
+                    System.arraycopy(boardVornoiCopy[i], 0, boardVornoi[i], 0, 50);
+                }
+
+                //System.out.println("log " + "My snake is closer to the apple: " + isCloser);
+
+                int move = 0;
 
                 if (isCloser) {
 
                     if (Astar.startAStar(board) == -1) {
                         // Remove the 'x's surrounding the zombie snake head
-//                        for (int i = 0; i < ZombiesnakeHeadX.size(); i++) {
-//                            int xHeadj = ZombiesnakeHeadX.get(i);
-//                            int yHeadj = ZombiesnakeHeadY.get(i);
-//
-//                            int[] dRow = {1, 0, -1, 0};
-//                            int[] dCol = {0, 1, 0, -1};
-//
-//                            for (int k = 0; k < 4; k++) {
-//                                int row = yHeadj + dRow[k];
-//                                int col = xHeadj + dCol[k];
-//                                if (row >= 0 && row < 50 && col >= 0 && col < 50) {
-//                                    if (board[row][col] == 'x') {
-//                                        board[row][col] = '-';
-//                                    }
-//                                }
-//                            }
-//                        }
-//
-//                        for (int zombie = 0; zombie < 6; zombie++) {
-//                            DrawBoard.drawSnake(ZombieLineArray.get(zombie), board);
-//                        }
+                        for (int i = 0; i < ZombiesnakeHeadX.size(); i++) {
+                            int xHeadj = ZombiesnakeHeadX.get(i);
+                            int yHeadj = ZombiesnakeHeadY.get(i);
+
+                            int[] dRow = {1, 0, -1, 0};
+                            int[] dCol = {0, 1, 0, -1};
+
+                            for (int k = 0; k < 4; k++) {
+                                int row = yHeadj + dRow[k];
+                                int col = xHeadj + dCol[k];
+                                if (row >= 0 && row < 50 && col >= 0 && col < 50) {
+                                    if (board[row][col] == 'x') {
+                                        board[row][col] = '-';
+                                    }
+                                }
+                            }
+                        }
+
+                        for (int zombie = 0; zombie < 6; zombie++) {
+                            DrawBoard.drawSnake(ZombieLineArray.get(zombie), board);
+                        }
 
                         //System.out.println("log " + "Removed zombie buffer");
                         move = Astar.startAStar(board);
@@ -322,82 +384,168 @@ class MyAgent extends DevelopmentAgent {
 
                 } else {
 
-                    // Find the co-ordinate in a 50x50 char grid which has the least 'x's surrounding it
-                    int[] dCol = {1, 0, -1, 0};
-                    int[] dRow = {0, 1, 0, -1};
-//
-                    int min = Integer.MAX_VALUE;
-                    int minRow = 0, minCol = 0;
+                    int bestMove = 0;
+                    int highestCellCount = 0;
+                    int[][] bestVornoiBoard = new int[50][50];
 
-                    for (int i = 0; i < 50; i++) {
-                        for (int j = 0; j < 50; j++) {
-                            if (board[i][j] == 'x') {
-                                int count = 0;
-                                for (int k = 0; k < 4; k++) {
-                                    int row = i + dRow[k];
-                                    int col = j + dCol[k];
-                                    if (row >= 0 && row < 50 && col >= 0 && col < 50) {
-                                        if (board[row][col] == 'x') {
-                                            count++;
+
+                    for (int i = 0; i < 4; i++) {
+                        move = i;
+
+                        switch (move) {
+                            case 0 -> {
+                                // Up (relative to the play area - north)
+                                // Check if the point is not out of bounds
+                                if (yHead - 1 < 50 && yHead - 1 >= 0 && xHead < 50 && xHead >= 0) {
+                                    if (board[yHead - 1][xHead] != 'x') {
+                                        // Change my head coordinates in the snake head array
+                                        snakeHeadX.set(0, xHead);
+                                        snakeHeadY.set(0, yHead - 1);
+                                        BFS.VornoiDiagram(boardVornoi, ZombiesnakeHeadX, ZombiesnakeHeadY, snakeHeadX, snakeHeadY);
+
+                                        if (boardVornoi[yHead - 1][xHead] == 7) {
+
+                                            // Scan through the boardVornoi and count the number of cells that are 7
+                                            int cellCount = 0;
+                                            for (int[] ints : boardVornoi) {
+                                                for (int anInt : ints) {
+                                                    if (anInt == 7) {
+                                                        cellCount++;
+                                                    }
+                                                }
+                                            }
+                                            if (cellCount > highestCellCount) {
+                                                highestCellCount = cellCount;
+                                                bestMove = move;
+
+                                                // Make a copy of the boardVornoi to the bestVornoiBoard
+                                                for (int j = 0; j < 50; j++) {
+                                                    System.arraycopy(boardVornoi[j], 0, bestVornoiBoard[j], 0, 50);
+                                                }
+
+                                            }
+                                            // Reset the boardVornoi back to the original
+                                            for (int j = 0; j < 50; j++) {
+                                                System.arraycopy(boardVornoiCopy[j], 0, boardVornoi[j], 0, 50);
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+                            case 1 -> {
+                                // Down (relative to the play area - south)
+                                if (yHead + 1 < 50 && yHead + 1 >= 0 && xHead < 50 && xHead >= 0) {
+                                    if (board[yHead + 1][xHead] != 'x') {
+                                        snakeHeadX.set(0, xHead);
+                                        snakeHeadY.set(0, yHead + 1);
+                                        BFS.VornoiDiagram(boardVornoi, ZombiesnakeHeadX, ZombiesnakeHeadY, snakeHeadX, snakeHeadY);
+                                        if (boardVornoi[yHead + 1][xHead] == 7) {
+                                            // Scan through the boardVornoi and count the number of cells that are 7
+                                            int cellCount = 0;
+                                            for (int[] ints : boardVornoi) {
+                                                for (int anInt : ints) {
+                                                    if (anInt == 7) {
+                                                        cellCount++;
+                                                    }
+                                                }
+                                            }
+                                            if (cellCount > highestCellCount) {
+                                                highestCellCount = cellCount;
+                                                bestMove = move;
+
+                                                // Make a copy of the boardVornoi to the bestVornoiBoard
+                                                for (int j = 0; j < 50; j++) {
+                                                    System.arraycopy(boardVornoi[j], 0, bestVornoiBoard[j], 0, 50);
+                                                }
+
+                                            }
+                                            // Reset the boardVornoi back to the original
+                                            for (int j = 0; j < 50; j++) {
+                                                System.arraycopy(boardVornoiCopy[j], 0, boardVornoi[j], 0, 50);
+                                            }
                                         }
                                     }
                                 }
-                                // Find the coordinate with the least 'x's
-                                if (count < min) {
-                                    min = count;
-                                    minRow = i;
-                                    minCol = j;
+                            }
+                            case 2 -> {
+                                // Left (relative to the play area - west)
+                                if (yHead < 50 && yHead >= 0 && xHead - 1 < 50 && xHead - 1 >= 0) {
+                                    if (board[yHead][xHead - 1] != 'x') {
+                                        snakeHeadX.set(0, xHead - 1);
+                                        snakeHeadY.set(0, yHead);
+                                        BFS.VornoiDiagram(boardVornoi, ZombiesnakeHeadX, ZombiesnakeHeadY, snakeHeadX, snakeHeadY);
+                                        if (boardVornoi[yHead][xHead - 1] == 7) {
+                                            // Scan through the boardVornoi and count the number of cells that are 7
+                                            int cellCount = 0;
+                                            for (int[] ints : boardVornoi) {
+                                                for (int anInt : ints) {
+                                                    if (anInt == 7) {
+                                                        cellCount++;
+                                                    }
+                                                }
+                                            }
+                                            if (cellCount > highestCellCount) {
+                                                highestCellCount = cellCount;
+                                                bestMove = move;
+
+                                                // Make a copy of the boardVornoi to the bestVornoiBoard
+                                                for (int j = 0; j < 50; j++) {
+                                                    System.arraycopy(boardVornoi[j], 0, bestVornoiBoard[j], 0, 50);
+                                                }
+
+                                            }
+                                            // Reset the boardVornoi back to the original
+                                            for (int j = 0; j < 50; j++) {
+                                                System.arraycopy(boardVornoiCopy[j], 0, boardVornoi[j], 0, 50);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            case 3 -> {
+                                // Right (relative to the play area - east)
+                                if (yHead < 50 && yHead >= 0 && xHead + 1 < 50 && xHead + 1 >= 0) {
+                                    if (board[yHead][xHead + 1] != 'x') {
+                                        snakeHeadX.set(0, xHead + 1);
+                                        snakeHeadY.set(0, yHead);
+                                        BFS.VornoiDiagram(boardVornoi, ZombiesnakeHeadX, ZombiesnakeHeadY, snakeHeadX, snakeHeadY);
+                                        if (boardVornoi[yHead][xHead + 1] == 7) {
+                                            // Scan through the boardVornoi and count the number of cells that are 7
+                                            int cellCount = 0;
+                                            for (int[] ints : boardVornoi) {
+                                                for (int anInt : ints) {
+                                                    if (anInt == 7) {
+                                                        cellCount++;
+                                                    }
+                                                }
+                                            }
+                                            if (cellCount > highestCellCount) {
+                                                highestCellCount = cellCount;
+                                                bestMove = move;
+
+                                                // Make a copy of the boardVornoi to the bestVornoiBoard
+                                                for (int j = 0; j < 50; j++) {
+                                                    System.arraycopy(boardVornoi[j], 0, bestVornoiBoard[j], 0, 50);
+                                                }
+
+                                            }
+                                            // Reset the boardVornoi back to the original
+                                            for (int j = 0; j < 50; j++) {
+                                                System.arraycopy(boardVornoiCopy[j], 0, boardVornoi[j], 0, 50);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
+
                     }
 
-                    if (board[minCol][minRow] != 'x') {
-                        board[appleX][appleY] = 'A';
-                        board[minCol][minRow] = 'G';
-                        //System.out.println("log " + minCol + " " + minRow);
-                    }
+                    //System.out.println("log Territory owned: " + highestCellCount);
+                    move = bestMove;
+                    //move = BFS.startBFS(board, boardFuture, true, false);
 
-
-                    if (BFS.startBFS(board, boardFuture, true, false) == -1) {
-
-                        // Remove the 'x's surrounding the zombie snake head
-//                        for (int i = 0; i < ZombiesnakeHeadX.size(); i++) {
-//                            int xHeadj = ZombiesnakeHeadX.get(i);
-//                            int yHeadj = ZombiesnakeHeadY.get(i);
-//
-//                            for (int k = 0; k < 4; k++) {
-//                                int row = yHeadj + dRow[k];
-//                                int col = xHeadj + dCol[k];
-//                                if (row >= 0 && row < 50 && col >= 0 && col < 50) {
-//                                    if (board[row][col] == 'x') {
-//                                        board[row][col] = '-';
-//                                    }
-//                                }
-//                            }
-//                        }
-//
-//                        for (int zombie = 0; zombie < 6; zombie++) {
-//                            DrawBoard.drawSnake(ZombieLineArray.get(zombie), board);
-//                        }
-
-                        //System.out.println("log " + "Removed zombie buffer");
-                        move = BFS.startBFS(board, boardFuture, true, false);
-                        //printGrid(board);
-                        //printIntGrid(boardFuture);
-
-                    } else {
-                        move = BFS.startBFS(board, boardFuture, true, false);
-                        //printGrid(board);
-                        //printIntGrid(boardFuture);
-                        //printIntGrid(boardFuture);
-                    }
-
-
-                    // Move to tail
-//                    board[appleX][appleY] = '-';
-//                    board[yTail][xTail] = 'G';
-//                    move = Tail.startBFS(board, false);
                 }
 
                 // Now I need to check if I have a path back to my tail once the move is taken

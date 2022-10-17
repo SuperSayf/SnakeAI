@@ -1,6 +1,4 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -36,10 +34,11 @@ public class BFS {
         return grid[point.row][point.col] == 'x';
     }
 
-    public static boolean isInvalidPointVornoi(char[][] grid, Node point) {
+    public static boolean isInvalidPointVornoi(int[][] grid, NodeBFS point) {
         if (point.row < 0 || point.row >= grid.length || point.col < 0 || point.col >= grid[0].length)
             return true;
-        return grid[point.row][point.col] != 'x';
+        // Return if it is a number between 1 and 10
+        return grid[point.row][point.col] >= 1 && grid[point.row][point.col] <= 10;
     }
 
     public static boolean isInvalidPointMain(char[][] grid, int[][] boardFuture, int queueLength, Node point) {
@@ -105,7 +104,7 @@ public class BFS {
         return path;
     }
 
-    public static void VornoiDiagram(char[][] grid, int[][] boardVornoi, ArrayList<Integer> ZombiesnakeHeadX, ArrayList<Integer> ZombiesnakeHeadY, ArrayList<Integer> snakeHeadX, ArrayList<Integer> snakeHeadY) {
+    public static void VornoiDiagram(int[][] boardVornoi, ArrayList<Integer> ZombiesnakeHeadX, ArrayList<Integer> ZombiesnakeHeadY, ArrayList<Integer> snakeHeadX, ArrayList<Integer> snakeHeadY) {
 
         ArrayList<Integer> HeadsY = new ArrayList<>(ZombiesnakeHeadX);
         ArrayList<Integer> HeadsX = new ArrayList<>(ZombiesnakeHeadY);
@@ -115,40 +114,51 @@ public class BFS {
         int numberOfHeads = HeadsX.size();
 
         // Have a queue for each head and add it to an array of queues, and perform directional BFS on each queue
-        ArrayList<Queue<Node>> toVisit = new ArrayList<>();
+        ArrayList<Queue<NodeBFS>> toVisit = new ArrayList<>();
+
         for (int i = 0; i < numberOfHeads; i++) {
-            Queue<Node> queue = new LinkedList<>();
-            queue.add(new Node(HeadsX.get(i), HeadsY.get(i), new Point()));
+            Queue<NodeBFS> queue = new LinkedList<>();
+            queue.add(new NodeBFS(HeadsX.get(i), HeadsY.get(i)));
             toVisit.add(queue);
         }
 
-        // Peform a n-directional BFS on each queue
-        while (true) {
-            boolean allEmpty = true;
-            for (int i = 0; i < numberOfHeads; i++) {
-                Queue<Node> queue = toVisit.get(i);
-                if (!queue.isEmpty()) {
-                    allEmpty = false;
-                    Node topNode = queue.poll();
-                    grid[topNode.row][topNode.col] = 'x';
+        // Perform an n-directional BFS on each queue, and remember how many nodes are in the queue before you pop off, here you're only popping off one item, which isn't valid
 
-                    boardVornoi[topNode.row][topNode.col] = i + 1;
+        boolean hasNodes = true;
 
-                    for (int[] off : adj) {
-                        Node nb = new Node(topNode.row + off[0], topNode.col + off[1], new Point());
-                        if (isInvalidPoint(grid, nb)) {
-                            boardVornoi[topNode.row][topNode.col] = i + 1;
+        while (hasNodes) {
+
+            int index = 0;
+            hasNodes = false;
+
+            for (Queue<NodeBFS> queue : toVisit) {
+
+                int queueLength = queue.size();
+                index++;
+
+                for (int j = 0; j < queueLength; j++) {
+                    NodeBFS topNode = queue.poll();
+
+                    assert topNode != null;
+
+                    for (NodeBFS nb : topNode.getNeighbours()) {
+                        if (isInvalidPointVornoi(boardVornoi, nb))
                             continue;
+
+                        if (boardVornoi[nb.row][nb.col] == -1) {
+                            boardVornoi[nb.row][nb.col] = index;
+                            queue.add(nb);
+                            nb.parent = topNode;
+                            hasNodes = true;
                         }
-                        queue.add(nb);
                     }
+
+
                 }
             }
-            if (allEmpty)
-                break;
         }
 
-        MyAgent.printIntGrid(boardVornoi);
+        //MyAgent.printIntGrid(boardVornoi);
 
     }
 
