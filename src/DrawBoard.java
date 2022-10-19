@@ -2,17 +2,6 @@ public class DrawBoard {
 
     private static int lengthTrack = 0;
 
-    public static void printBoard(char[][] board) {
-        StringBuilder map = new StringBuilder();
-        for (char[] chars : board) {
-            for (char aChar : chars) {
-                map.append(aChar).append(" ");
-            }
-            map.append("\n");
-        }
-        Logger.log(map.toString());
-    }
-
     public static void drawSnake(String snake, char[][] board) {
         String[] snakePoints = snake.split(" ");
 
@@ -84,6 +73,30 @@ public class DrawBoard {
                 board[j][i] = snakeNumber;
             }
         }
+    }
+
+    public static void printGrid(char[][] grid) {
+        StringBuilder map = new StringBuilder();
+        for (char[] chars : grid) {
+            for (char aChar : chars) {
+                map.append(aChar).append(" ");
+            }
+            map.append("\n");
+        }
+        Logger.log(map.toString());
+    }
+
+    public static void printIntGrid(int[][] grid) {
+        StringBuilder map = new StringBuilder();
+
+        for (int[] ints : grid) {
+            for (int anInt : ints) {
+                map.append(anInt).append(" ");
+            }
+            map.append("\n");
+        }
+
+        Logger.log(map.toString());
     }
 
 }

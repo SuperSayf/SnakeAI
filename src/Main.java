@@ -12,36 +12,13 @@ class MyAgent extends DevelopmentAgent {
         MyAgent.start(agent, args);
     }
 
-    public static void printGrid(char[][] grid) {
-        StringBuilder map = new StringBuilder();
-        for (char[] chars : grid) {
-            for (char aChar : chars) {
-                map.append(aChar).append(" ");
-            }
-            map.append("\n");
-        }
-        Logger.log(map.toString());
-    }
-
-    public static void printIntGrid(int[][] grid) {
-        StringBuilder map = new StringBuilder();
-
-        for (int[] ints : grid) {
-            for (int anInt : ints) {
-                map.append(anInt).append(" ");
-            }
-            map.append("\n");
-        }
-
-        //Logger.log(map.toString());
-    }
-
     @Override
     public void run() {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
             String initString = br.readLine();
             String[] temp = initString.split(" ");
             int nSnakes = Integer.parseInt(temp[0]);
+            
             char[][] board = new char[50][50];
             int[][] boardFuture = new int[50][50];
             int[][] boardVornoi = new int[50][50];
@@ -87,16 +64,16 @@ class MyAgent extends DevelopmentAgent {
 
                     // Surround the head of the zombie snake with x's
 
-//                    int[] dRow = {1, 0, -1, 0};
-//                    int[] dCol = {0, 1, 0, -1};
-//
-//                    for (int i = 0; i < 4; i++) {
-//                        int row = y + dRow[i];
-//                        int col = x + dCol[i];
-//                        if (row >= 0 && row < 50 && col >= 0 && col < 50) {
-//                            board[row][col] = 'x';
-//                        }
-//                    }
+                    int[] dRow = {1, 0, -1, 0};
+                    int[] dCol = {0, 1, 0, -1};
+
+                    for (int i = 0; i < 4; i++) {
+                        int row = y + dRow[i];
+                        int col = x + dCol[i];
+                        if (row >= 0 && row < 50 && col >= 0 && col < 50) {
+                            board[row][col] = 'x';
+                        }
+                    }
 
                     DrawBoard.drawSnake(zombieLine, board);
                     DrawBoard.drawSnakeFuture(zombieLine, boardFuture, 5);
@@ -235,8 +212,6 @@ class MyAgent extends DevelopmentAgent {
 //                    }
 //                }
 
-                board[yHead][xHead] = 'S';
-
 
                 //DrawBoard.printBoard(board);
 
@@ -270,53 +245,89 @@ class MyAgent extends DevelopmentAgent {
                 //System.out.println("log " + "My snake is closer to the apple: " + isCloser);
 
                 // Get the steps of the zombie snakes
-                ArrayList<Integer> stepsList = new ArrayList<>();
-                for (int i = 0; i < ZombiesnakeHeadX.size(); i++) {
-                    int xHeadj = ZombiesnakeHeadX.get(i);
-                    int yHeadj = ZombiesnakeHeadY.get(i);
+//                ArrayList<Integer> stepsList = new ArrayList<>();
+//
+//                for (int i = 0; i < ZombiesnakeHeadX.size(); i++) {
+//                    int xHeadj = ZombiesnakeHeadX.get(i);
+//                    int yHeadj = ZombiesnakeHeadY.get(i);
+//
+//                    char c = board[yHeadj][xHeadj];
+//
+//                    board[yHeadj][xHeadj] = 'S';
+//
+//                    board[appleX][appleY] = 'A';
+//
+//                    board[yHead][xHead] = 'G';
+//
+//                    ArrayList<String> path = BFS.startBFSAnalyze(board);
+//
+//                    int steps = path.size();
+//
+//                    //System.out.println("log Steps: " + steps);
+//
+//                    stepsList.add(steps);
+//
+//                    board[yHeadj][xHeadj] = c;
+//
+//                    // To-do
+//                    // This takes them straight to my head, I need it one in front of my head
+//
+//                    // If there are more than 3 steps, then loop through the first 2 elements of the path
+//                    for (int j = 0; j < 2; j++) {
+//                        if (steps >= 2) {
+//                            String[] tempPath = path.get(j).split(",");
+//                            int x = Integer.parseInt(tempPath[0]);
+//                            int y = Integer.parseInt(tempPath[1]);
+//
+//                            // Replace the x-y zombie head coordinates with the x-y coordinates of the path
+//                            ZombiesnakeHeadX.set(i, y);
+//                            ZombiesnakeHeadY.set(i, x);
+//
+//                            if (board[x][y] != 'G' || board[x][y] != 'S' || board[x][y] != 'A') {
+//                                board[x][y] = 'x';
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                stepsList.clear();
+//                board[yHead][xHead] = 'x';
+//                board[appleX][appleY] = 'G';
+//
+//                //Get the steps of the other snakes
+//                for (int i = 1; i < snakeHeadX.size(); i++) {
+//                    int xHeadj = snakeHeadX.get(i);
+//                    int yHeadj = snakeHeadY.get(i);
+//
+//                    char c = board[yHeadj][xHeadj];
+//
+//                    board[yHeadj][xHeadj] = 'S';
+//
+//                    ArrayList<String> path = BFS.startBFSAnalyze(board);
+//
+//                    int steps = path.size();
+//
+//                    //System.out.println("log Steps: " + steps);
+//
+//                    stepsList.add(steps);
+//
+//                    board[yHeadj][xHeadj] = c;
+//
+//                    // If there are more than 3 steps, then loop through the first 2 elements of the path
+//                    for (int j = 0; j < 2; j++) {
+//                        if (steps >= 3) {
+//                            String[] tempPath = path.get(j).split(",");
+//                            int x = Integer.parseInt(tempPath[0]);
+//                            int y = Integer.parseInt(tempPath[1]);
+//
+//                            if (board[x][y] != 'G' || board[x][y] != 'S' || board[x][y] != 'A') {
+//                                board[x][y] = 'x';
+//                            }
+//                        }
+//                    }
+//                }
 
-                    char c = board[yHeadj][xHeadj];
-
-                    board[yHeadj][xHeadj] = 'S';
-
-                    board[appleX][appleY] = 'A';
-
-                    board[yHead][xHead] = 'G';
-
-                    ArrayList<String> path = BFS.startBFSAnalyze(board);
-
-                    int steps = path.size();
-
-                    //System.out.println("log Steps: " + steps);
-
-                    stepsList.add(steps);
-
-                    board[yHeadj][xHeadj] = c;
-
-                    // To-do
-                    // This takes them straight to my head, I need it one in front of my head
-
-                    // If there are more than 3 steps, then loop through the first 2 elements of the path
-                    for (int j = 0; j < 2; j++) {
-                        if (steps >= 2) {
-                            String[] tempPath = path.get(j).split(",");
-                            int x = Integer.parseInt(tempPath[0]);
-                            int y = Integer.parseInt(tempPath[1]);
-
-                            // Replace the x-y zombie head coordinates with the x-y coordinates of the path
-                            ZombiesnakeHeadX.set(i, y);
-                            ZombiesnakeHeadY.set(i, x);
-
-                            if (board[x][y] != 'G' || board[x][y] != 'S' || board[x][y] != 'A') {
-                                board[x][y] = 'x';
-                            }
-                        }
-                    }
-                }
-
-                stepsList.clear();
                 board[yHead][xHead] = 'S';
-                board[appleX][appleY] = 'G';
 
                 //printGrid(board);
 
@@ -332,7 +343,7 @@ class MyAgent extends DevelopmentAgent {
                 //printIntGrid(boardVornoi);
 
                 boolean isCloser = boardVornoi[appleX][appleY] == 7;
-                //isCloser = true;
+                //boolean isCloser = true;
 
                 // Set the boardVornoi back to the original
                 for (int i = 0; i < 50; i++) {
