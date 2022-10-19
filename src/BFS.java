@@ -104,21 +104,23 @@ public class BFS {
         return path;
     }
 
-    public static void VornoiDiagram(int[][] boardVornoi, ArrayList<Integer> ZombiesnakeHeadX, ArrayList<Integer> ZombiesnakeHeadY, ArrayList<Integer> snakeHeadX, ArrayList<Integer> snakeHeadY) {
+    public static void VornoiDiagram(int[][] boardVoronoi, ArrayList<Point> zombieSnakeHeads, ArrayList<Point> snakeHeads, ArrayList<Integer> cellCount) {
 
-        ArrayList<Integer> HeadsY = new ArrayList<>(ZombiesnakeHeadX);
-        ArrayList<Integer> HeadsX = new ArrayList<>(ZombiesnakeHeadY);
-        HeadsY.addAll(snakeHeadX);
-        HeadsX.addAll(snakeHeadY);
+        ArrayList<Point> Heads = new ArrayList<>();
+        Heads.addAll(zombieSnakeHeads);
+        Heads.addAll(snakeHeads);
 
-        int numberOfHeads = HeadsX.size();
+        //Initialize 0-10 on the cellCount array
+        for (int i = 0; i < 10; i++) {
+            cellCount.add(0);
+        }
 
         // Have a queue for each head and add it to an array of queues, and perform directional BFS on each queue
         ArrayList<Queue<NodeBFS>> toVisit = new ArrayList<>();
 
-        for (int i = 0; i < numberOfHeads; i++) {
+        for (Point head : Heads) {
             Queue<NodeBFS> queue = new LinkedList<>();
-            queue.add(new NodeBFS(HeadsX.get(i), HeadsY.get(i)));
+            queue.add(new NodeBFS(head));
             toVisit.add(queue);
         }
 
@@ -133,20 +135,21 @@ public class BFS {
 
             for (Queue<NodeBFS> queue : toVisit) {
 
-                int queueLength = queue.size();
                 index++;
 
+                int queueLength = queue.size();
                 for (int j = 0; j < queueLength; j++) {
                     NodeBFS topNode = queue.poll();
 
                     assert topNode != null;
 
                     for (NodeBFS nb : topNode.getNeighbours()) {
-                        if (isInvalidPointVornoi(boardVornoi, nb))
+                        if (isInvalidPointVornoi(boardVoronoi, nb))
                             continue;
 
-                        if (boardVornoi[nb.row][nb.col] == -1) {
-                            boardVornoi[nb.row][nb.col] = index;
+                        if (boardVoronoi[nb.row][nb.col] == -1) {
+                            boardVoronoi[nb.row][nb.col] = index;
+                            cellCount.set(index - 1, cellCount.get(index - 1) + 1);
                             queue.add(nb);
                             nb.parent = topNode;
                             hasNodes = true;
@@ -157,8 +160,6 @@ public class BFS {
                 }
             }
         }
-
-        //MyAgent.printIntGrid(boardVornoi);
 
     }
 

@@ -31,19 +31,7 @@ public class Astar {
         return point.row < 0 || point.row == 50 || point.col < 0 || point.col == 50 || grid[point.row][point.col] == 'x';
     }
 
-    public static int startAStar(char[][] grid) {
-        Point start = new Point(), end = new Point();
-
-        for (int i = 0; i < 50; i++) // Finding start and end point coordinates
-        {
-            for (int j = 0; j < 50; j++) {
-                if (grid[i][j] == 'G')
-                    start.set(i, j);
-
-                else if (grid[i][j] == 'S')
-                    end.set(i, j);
-            }
-        }
+    public static int startAStar(char[][] grid, Point start, Point end) {
 
         Node head = new Node(start.row, start.col, end);
         Node apple = new Node(end.row, end.col, end);

@@ -6,8 +6,8 @@ public class Point {
         this.col = col;
     }
 
-    public Point(String point) {
-        String[] coords = point.split(",");
+    public Point(String point, String split) {
+        String[] coords = point.split(split);
         this.row = Integer.parseInt(coords[1]);
         this.col = Integer.parseInt(coords[0]);
     }
