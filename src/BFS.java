@@ -133,21 +133,29 @@ public class BFS {
             int index = 0;
             hasNodes = false;
 
+
             for (Queue<NodeBFS> queue : toVisit) {
 
                 index++;
 
                 int queueLength = queue.size();
                 for (int j = 0; j < queueLength; j++) {
+
+                    if ((index < 7) && (MyAgent.logCount % 2 == 0)) {
+                        continue;
+                    }
+
                     NodeBFS topNode = queue.poll();
 
                     assert topNode != null;
 
                     for (NodeBFS nb : topNode.getNeighbours()) {
+
                         if (isInvalidPointVornoi(boardVoronoi, nb))
                             continue;
 
                         if (boardVoronoi[nb.row][nb.col] == -1) {
+
                             boardVoronoi[nb.row][nb.col] = index;
                             cellCount.set(index - 1, cellCount.get(index - 1) + 1);
                             queue.add(nb);

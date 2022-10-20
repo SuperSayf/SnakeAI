@@ -18,8 +18,6 @@ class MyAgent extends DevelopmentAgent {
     public void run() {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
 
-            logCount++;
-
             String initString = br.readLine();
             String[] temp = initString.split(" ");
             int nSnakes = Integer.parseInt(temp[0]);
@@ -29,6 +27,11 @@ class MyAgent extends DevelopmentAgent {
             int[][] boardVoronoi = new int[50][50];
 
             while (true) {
+
+                logCount++;
+
+                // Start timer
+//                Instant start = Instant.now();
 
                 for (int i = 0; i < 50; i++) {
                     for (int j = 0; j < 50; j++) {
@@ -147,8 +150,11 @@ class MyAgent extends DevelopmentAgent {
                 for (int i = 0; i < 50; i++) {
                     System.arraycopy(boardVoronoi[i], 0, boardVoronoiCopy[i], 0, 50);
                 }
+                //DrawBoard.printIntGrid(boardVoronoi);
                 BFS.VornoiDiagram(boardVoronoi, zombieSnakeHeads, snakeHeads, cellCount);
+                //DrawBoard.printIntGrid(boardVoronoi);
                 boolean isCloser = boardVoronoi[applePoint.row][applePoint.col] <= 7;
+                //boolean isCloser = true;
                 // Set the boardVoronoi back to the original
                 for (int i = 0; i < 50; i++) {
                     System.arraycopy(boardVoronoiCopy[i], 0, boardVoronoi[i], 0, 50);
@@ -321,6 +327,15 @@ class MyAgent extends DevelopmentAgent {
 //                        }
 //                    }
 //                }
+
+//                // End timer
+//                Instant end = Instant.now();
+//
+//                // Calculate the time taken
+//                Duration timeElapsed = Duration.between(start, end);
+//
+//                // Print the time taken
+//                System.out.println("log " + timeElapsed.toMillis());
 
                 System.out.println(move);
             }
