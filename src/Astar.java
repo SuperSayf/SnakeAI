@@ -5,28 +5,6 @@ public class Astar {
 
     static int[][] adj = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-    public static void printPath(char[][] grid, Node start, Node end) {
-        Node endNode = end.parent;
-
-        while (!endNode.equals(start)) {
-            grid[endNode.row][endNode.col] = '*';
-            endNode = endNode.parent;
-        }
-
-        printGrid(grid);
-    }
-
-    public static void printGrid(char[][] grid) {
-        StringBuilder map = new StringBuilder();
-        for (char[] chars : grid) {
-            for (char aChar : chars) {
-                map.append(aChar).append(" ");
-            }
-            map.append("\n");
-        }
-        //Logger.log(map.toString());
-    }
-
     public static boolean isValidPoint(char[][] grid, Node point) {
         return point.row < 0 || point.row == 50 || point.col < 0 || point.col == 50 || grid[point.row][point.col] == 'x';
     }
@@ -47,7 +25,6 @@ public class Astar {
             visited.add(curr);
 
             if (curr.equals(apple)) {
-                printPath(grid, head, curr);
                 return getMove(apple, curr.parent);
             }
 
