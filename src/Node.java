@@ -7,7 +7,6 @@ public class Node extends Point implements Comparable<Node> {
     public Node(int row, int col, Point end) {
         super(row, col);
 
-
         //Edit this heuristic to change the algorithm
         fCost = end.distanceTo(this);
 
@@ -28,10 +27,6 @@ public class Node extends Point implements Comparable<Node> {
             return false;
 
         return this.row == node.row && this.col == node.col;
-    }
-
-    public String toString() {
-        return "{" + this.row + ", " + this.col + "}";
     }
 
     @Override

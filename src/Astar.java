@@ -5,8 +5,8 @@ public class Astar {
 
     static int[][] adj = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-    public static boolean isValidPoint(char[][] grid, Node point) {
-        return point.row < 0 || point.row == 50 || point.col < 0 || point.col == 50 || grid[point.row][point.col] == 'x';
+    public static boolean isInvalidPoint(char[][] grid, Node point) {
+        return point.row < 0 || point.row >= 50 || point.col < 0 || point.col >= 50 || grid[point.row][point.col] == 'x';
     }
 
     public static int startAStar(char[][] grid, Point start, Point end) {
@@ -31,7 +31,7 @@ public class Astar {
             for (int[] off : adj) {
                 Node node = new Node(curr.row + off[0], curr.col + off[1], end);
 
-                if (isValidPoint(grid, node) || visited.contains(node))
+                if (isInvalidPoint(grid, node) || visited.contains(node))
                     continue;
 
                 visited.add(node);

@@ -32,8 +32,7 @@ public class BFS {
         // Perform an n-directional BFS on each queue, and remember how many nodes are in the queue before you pop off, here you're only popping off one item, which isn't valid
 
         boolean hasNodes = true;
-        //int logCount = MyAgent.logCount;
-        int logCount = 0;
+        int logCount = MyAgent.logCount;
 
         while (hasNodes) {
 
@@ -46,9 +45,8 @@ public class BFS {
                 int queueLength = queue.size();
                 for (int j = 0; j < queueLength; j++) {
 
-                    if ((Index.get(index) < 7) && ((MyAgent.logCount + logCount) % 2 != 0)) {
+                    if ((Index.get(index) < 7) && (logCount % 2 != 0)) {
                         logCount++;
-                        //queueLength--;
                         continue;
                     }
                     logCount++;

@@ -24,10 +24,9 @@ public class NodeBFS extends Point {
         if (this == other)
             return true;
 
-        if (!(other instanceof NodeBFS))
+        if (!(other instanceof NodeBFS node))
             return false;
 
-        NodeBFS node = (NodeBFS) other;
         return this.row == node.row && this.col == node.col;
     }
 }
