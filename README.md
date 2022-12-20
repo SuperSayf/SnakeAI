@@ -1,5 +1,5 @@
 # Snake AI
-Yes.
+This project was for my COMS2015A course, which required us to code up various algorithms and techniques for an AI programming challenge, "Write a program to play a multiplayer version of the game Snake. The goal? Eat enough apples to become the longest snake on the board. But don't forget about the other players. You'll want to stop them doing the same thing. By any means necessary."
 
 # Gameplay
 
